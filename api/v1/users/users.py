@@ -31,11 +31,12 @@ async def register_user(
     register_user_request: RegisterUserRequest,
     auth_controller: AuthController = Depends(Factory().get_auth_controller),
 ) -> UserResponse:
-    return await auth_controller.register(
+    user = await auth_controller.register(
         email=register_user_request.email,
         password=register_user_request.password,
         username=register_user_request.username,
     )
+    return UserResponse(email=user.email, username=user.username, uuid=user.uuid )
 
 
 @user_router.post("/login")
