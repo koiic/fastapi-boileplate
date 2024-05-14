@@ -3,6 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+from core.cache import Cache
 from core.database import Base, Propagation, Transactional
 from core.exceptions import NotFoundException
 from core.repository import BaseRepository
@@ -54,6 +55,7 @@ class BaseController(Generic[ModelType]):
             )
         return db_obj
 
+    @Cache.cached(prefix='users', ttl=60)
     async def get_all(
         self, skip: int = 0, limit: int = 100, join_: set[str] | None = None
     ) -> list[ModelType]:
